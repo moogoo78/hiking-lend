@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block style %}
+<script src="{{ url_for('static', filename='js/index.umd.min.js') }}"></script>
+{% endblock %}
+
+{% block script %}
+  <script>
+      const DateTime = easepick.DateTime;
+      const bookedDates = [
+          '2023-01-02',
+          ['2023-01-06', '2023-01-11'],
+          '2023-01-18',
+          '2023-01-19',
+          '2023-01-20',
+          '2023-01-25',
+          '2023-01-28',
+      ].map(d => {
+          if (d instanceof Array) {
+            const start = new DateTime(d[0], 'YYYY-MM-DD');
+            const end = new DateTime(d[1], 'YYYY-MM-DD');
+
+            return [start, end];
+          }
+
+          return new DateTime(d, 'YYYY-MM-DD');
+      });
+      const picker = new easepick.create({
+        element: document.getElementById('datepicker'),
+        css: [
+          'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css',
+          "{{ url_for('static', filename="css/index.css") }}",
+          'https://easepick.com/css/demo_hotelcal.css',
+        ],
+        plugins: ['RangePlugin', 'LockPlugin'],
+        RangePlugin: {
+          tooltipNumber(num) {
+            return num - 1;
+          },
+          locale: {
+            one: 'night',
+            other: 'nights',
+          },
+        },
+        LockPlugin: {
+          minDate: new Date(),
+          minDays: 2,
+          inseparable: true,
+          filter(date, picked) {
+            if (picked.length === 1) {
+              const incl = date.isBefore(picked[0]) ? '[)' : '(]';
+              return !picked[0].isSame(date, 'day') && date.inArray(bookedDates, incl);
+            }
+
+            return date.inArray(bookedDates, '[)');
+          },
+        }
+      });
+    </script>
+{% endblock %}
+
+    {% block main %}
+
+
+    <div class="uk-container uk-container-small">
+
+    <form class="uk-form-stacked">
+      <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Legend</legend>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="form-stacked-text">聯絡人</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="name" type="text" placeholder="">
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="form-stacked-text">電話</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="phone" type="text" placeholder="">
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="form-stacked-select">Select</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" id="form-stacked-select">
+              <option>Option 01</option>
+              <option>Option 02</option>
+            </select>
+        </div>
+        </div>
+
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="datepicker">選擇日期</label>
+          <div class="uk-form-controls">
+            <input id="datepicker" class="uk-input" placeholder="choose..."/>
+          </div>
+        </div>
+
+        <div class="uk-margin">
+          <label class="uk-form-label" for="form-stacked-text">備註</label>
+          <div class="uk-form-controls">
+            <textarea name="remarks"></textarea>
+          </div>
+        </div>
+
+      </fieldset>
+      </form>
+</div>
+
+{% endblock %}
