@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css')}} " />
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block main %}
+<div class="uk-container uk-container-small">
+  <h2>租借狀態</h2>
+  <table class="uk-table">
+    <caption>{{ year }} 年 {{ month }} 月</caption>
+    <thead>
+      <tr>
+        <th>週一</th>
+        <th>週二</th>
+        <th>週三</th>
+        <th>週四</th>
+        <th>週五</th>
+        <th>週六</th>
+        <th>週日</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for week_list in cal_list %}
+      <tr>
+        {% for d in week_list %}
+        <td class="{% if d>5 and d<7 %}day-full{% else %}{% endif %}">{% if d != 0 %}{{ d }}{% endif %}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="uk-button uk-button-primary" href="{{ url_for('main.lend_view') }}">預約</a>
+</div>
+
+{% endblock %}

@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 
 {% block style %}
-<script src="{{ url_for('static', filename='js/index.umd.min.js') }}"></script>
+
 {% endblock %}
 
 {% block script %}
-  <script>
+<script src="{{ url_for('static', filename='js/easepick.min.js') }}"></script>
+<script>
       const DateTime = easepick.DateTime;
       const bookedDates = [
-          '2023-01-02',
-          ['2023-01-06', '2023-01-11'],
-          '2023-01-18',
-          '2023-01-19',
-          '2023-01-20',
-          '2023-01-25',
-          '2023-01-28',
+          '2023-02-02',
+          ['2023-02-06', '2023-01-11'],
+          '2023-02-18',
+          '2023-02-20',
+          '2023-02-25',
       ].map(d => {
           if (d instanceof Array) {
             const start = new DateTime(d[0], 'YYYY-MM-DD');
@@ -28,9 +27,8 @@
       const picker = new easepick.create({
         element: document.getElementById('datepicker'),
         css: [
-          'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css',
-          "{{ url_for('static', filename="css/index.css") }}",
-          'https://easepick.com/css/demo_hotelcal.css',
+          "{{ url_for('static', filename="css/easepick.css") }}",
+          "{{ url_for('static', filename="css/demo_hotelcal.css") }}",
         ],
         plugins: ['RangePlugin', 'LockPlugin'],
         RangePlugin: {
@@ -56,60 +54,57 @@
           },
         }
       });
-    </script>
+</script>
 {% endblock %}
 
-    {% block main %}
+{% block main %}
+<div class="uk-container uk-margin-remove-top">
+  <form class="uk-form-stacked" action="{{ url_for('main.lend_view') }}" method="post">
+    <fieldset class="uk-fieldset">
+      <legend class="uk-legend">Legend</legend>
 
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-text">聯絡人</label>
+        <div class="uk-form-controls">
+          <input class="uk-input" id="name" type="text" placeholder="" name="person">
+        </div>
+      </div>
 
-    <div class="uk-container uk-container-small">
-
-    <form class="uk-form-stacked">
-      <fieldset class="uk-fieldset">
-
-        <legend class="uk-legend">Legend</legend>
-
-        <div class="uk-margin">
-          <label class="uk-form-label" for="form-stacked-text">聯絡人</label>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-text">聯絡電話</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="name" type="text" placeholder="">
+            <input class="uk-input" id="phone" type="text" placeholder="" name="phone">
           </div>
-        </div>
+      </div>
 
-        <div class="uk-margin">
-          <label class="uk-form-label" for="form-stacked-text">電話</label>
-          <div class="uk-form-controls">
-            <input class="uk-input" id="phone" type="text" placeholder="">
-          </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-select">領取店家</label>
+        <div class="uk-form-controls">
+          <select class="uk-select" id="form-stacked-select" name="store">
+            <option value="">-- 請選擇--</option>
+            {% for i in store_list %}
+            <option value="{{ i.id }}">{{ i.title }}</option>
+            {% endfor %}
+          </select>
         </div>
+      </div>
 
-        <div class="uk-margin">
-          <label class="uk-form-label" for="form-stacked-select">Select</label>
-          <div class="uk-form-controls">
-            <select class="uk-select" id="form-stacked-select">
-              <option>Option 01</option>
-              <option>Option 02</option>
-            </select>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="datepicker">選擇日期</label>
+        <div class="uk-form-controls">
+          <input id="datepicker" class="uk-input" placeholder="choose..." name="pickdate" />
         </div>
+      </div>
+
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-text">備註</label>
+        <div class="uk-form-controls">
+          <textarea class="uk-textarea" name="remarks"></textarea>
         </div>
+      </div>
 
-
-        <div class="uk-margin">
-          <label class="uk-form-label" for="datepicker">選擇日期</label>
-          <div class="uk-form-controls">
-            <input id="datepicker" class="uk-input" placeholder="choose..."/>
-          </div>
-        </div>
-
-        <div class="uk-margin">
-          <label class="uk-form-label" for="form-stacked-text">備註</label>
-          <div class="uk-form-controls">
-            <textarea name="remarks"></textarea>
-          </div>
-        </div>
-
-      </fieldset>
-      </form>
+      <button class="uk-button uk-button-primary">送出</button>
+    </fieldset>
+  </form>
 </div>
-
 {% endblock %}

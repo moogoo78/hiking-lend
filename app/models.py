@@ -46,13 +46,34 @@ class Store(Base):
     title = Column(String(500))
 
 class Entity(Base):
+    STATUS_CHOICES = (
+        ('F', 'Free'),
+        ('O', 'Occupied'),
+    )
+
     __tablename__ = 'entity'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(500))
     store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
+    status = Column(String(10)) # F: free, O: occupied
     store = relationship('Store')
 
+    @staticmethod
+    def find_free():
+        return Entity.query.filter(Entity.status==Entity.STATUS_CHOICES[0][0]).all()
+
+class Lending(Base):
+    __tablename__ = 'lending'
+
+    id = Column(Integer, primary_key=True)
+    person = Column(String(500))
+    phone = Column(String(500))
+    date_start = Column(Date)
+    date_end = Column(Date)
+    store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
+    # entity_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
+    remarks = Column(Text)
 
 class LendLog(Base):
     __tablename__ = 'lend_log'

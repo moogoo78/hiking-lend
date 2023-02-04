@@ -52,10 +52,10 @@ dictConfig({
 '''
 def apply_blueprints(app):
     from app.blueprints.main import main as main_bp
-    #from app.blueprints.admin import admin as admin_bp;
+    from app.blueprints.admin import admin as admin_bp;
 
     app.register_blueprint(main_bp)
-    #app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
 
 
 def create_app():
