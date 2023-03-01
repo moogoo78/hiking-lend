@@ -61,86 +61,88 @@ def apply_blueprints(app):
 def create_app():
     app = Flask(__name__)
 
-    apply_blueprints(app)
-
     #print(app.config, flush=True)
     app.secret_key = 'no secret'
 
-    # flask extensions
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(id)
-
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        if request.method == 'GET':
-            return render_template('login.html')
-        elif request.method == 'POST':
-            username = request.form.get('username', '')
-            passwd = request.form.get('passwd', '')
-
-            if u := User.query.filter(username==username).first():
-                if check_password_hash(u.passwd, passwd):
-                    login_user(u)
-                    flash('已登入')
-                    #next_url = flask.request.args.get('next')
-                    # is_safe_url should check if the url is safe for redirects.
-                    # See http://flask.pocoo.org/snippets/62/ for an example.
-                    #if not is_safe_url(next):
-                    #    return flask.abort(400)
-                    return redirect(url_for('admin.index'))
-
-            flash('帳號或密碼錯誤')
-            return redirect('/login')
-
-    @app.route('/logout')
-    @login_required
-    def logout():
-        logout_user()
-        return redirect(url_for('main.index'))
-
-    @app.route('/url_maps')
-    def debug_url_maps():
-        rules = []
-        for rule in app.url_map.iter_rules():
-            rules.append([str(rule), str(rule.methods), rule.endpoint])
-        return jsonify(rules)
-
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        # SQLAlchemy won`t close connection, will occupy pool
-        session.remove()
-
-    @app.cli.command('makemigrations')
-    @click.argument('message')
-    def makemigrations(message):
-        cmd_list = [ALEMBIC_BIN_PATH, 'revision', '--autogenerate', '-m', message]
-        subprocess.call(cmd_list)
-
-        return None
-
-    @app.cli.command('migrate')
-    def migrate():
-        cmd_list = [ALEMBIC_BIN_PATH, 'upgrade', 'head']
-        subprocess.call(cmd_list)
-
-    @app.cli.command('createuser')
-    @click.argument('username')
-    @click.argument('passwd')
-    @click.argument('org_id')
-    def createuser(username, passwd, org_id):
-        hashed_password = generate_password_hash(passwd)
-        user = User(username=username, passwd=hashed_password)
-        session.add(user)
-        session.commit()
-        print(f'create user: {username}, {hashed_password}',flush=True)
-
-    # @app.cli.command('load_data')
-    # def func_load_data():
-    #     import load_data_conf
-    #     load_data.import_csv(load_data_conf.conf)
-    #     return None
     return app
+
+flask_app = create_app()
+apply_blueprints(flask_app)
+
+# flask extensions
+login_manager = LoginManager()
+login_manager.init_app(flask_app)
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+@flask_app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        username = request.form.get('username', '')
+        passwd = request.form.get('passwd', '')
+
+        if u := User.query.filter(username==username).first():
+            if check_password_hash(u.passwd, passwd):
+                login_user(u)
+                flash('已登入')
+                #next_url = flask.request.args.get('next')
+                # is_safe_url should check if the url is safe for redirects.
+                # See http://flask.pocoo.org/snippets/62/ for an example.
+                #if not is_safe_url(next):
+                #    return flask.abort(400)
+                return redirect(url_for('admin.index'))
+
+        flash('帳號或密碼錯誤')
+        return redirect('/login')
+
+@flask_app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
+
+@flask_app.route('/url_maps')
+def debug_url_maps():
+    rules = []
+    for rule in app.url_map.iter_rules():
+        rules.append([str(rule), str(rule.methods), rule.endpoint])
+    return jsonify(rules)
+
+@flask_app.teardown_appcontext
+def shutdown_session(exception=None):
+    # SQLAlchemy won`t close connection, will occupy pool
+    session.remove()
+
+@flask_app.cli.command('makemigrations')
+@click.argument('message')
+def makemigrations(message):
+    cmd_list = [ALEMBIC_BIN_PATH, 'revision', '--autogenerate', '-m', message]
+    subprocess.call(cmd_list)
+
+    return None
+
+@flask_app.cli.command('migrate')
+def migrate():
+    cmd_list = [ALEMBIC_BIN_PATH, 'upgrade', 'head']
+    subprocess.call(cmd_list)
+
+@flask_app.cli.command('createuser')
+@click.argument('username')
+@click.argument('passwd')
+@click.argument('org_id')
+def createuser(username, passwd, org_id):
+    hashed_password = generate_password_hash(passwd)
+    user = User(username=username, passwd=hashed_password)
+    session.add(user)
+    session.commit()
+    print(f'create user: {username}, {hashed_password}',flush=True)
+
+# @app.cli.command('load_data')
+# def func_load_data():
+#     import load_data_conf
+#     load_data.import_csv(load_data_conf.conf)
+#     return None

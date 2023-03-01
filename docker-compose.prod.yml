@@ -19,7 +19,7 @@ services:
       - ./docker/nginx:/etc/nginx/conf.d
       #- ../naturedb-volumes/static:/naturedb-volumes/static
       #- ../naturedb-volumes/admin:/naturedb-volumes/admin
-      - ../naturedb-volumes/bucket:/bucket
+      - ../hikinglend-volumes/bucket:/bucket
       #- ../naturedb-volumes/certbot/conf:/etc/letsencrypt
       #- ../naturedb-volumes/certbot/www:/var/www/certbot
 #  certbot:
