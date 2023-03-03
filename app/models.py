@@ -44,6 +44,19 @@ class Store(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String(500))
+    latitude_decimal = Column(Numeric(precision=9, scale=6))
+    longitude_decimal = Column(Numeric(precision=10, scale=7))
+    address = Column(Text)
+    #telephone = Column(String(500))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'coordinates': [self.latitude_decimal, self.longitude_decimal],
+            'address': self.address,
+            #'telephone': self.telephone,
+        }
 
 class Entity(Base):
     STATUS_CHOICES = (

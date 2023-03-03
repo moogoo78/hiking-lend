@@ -28,12 +28,14 @@ def landing():
 @main.route('/lend', methods=['GET', 'POST'])
 def lend_view():
     if request.method == 'GET':
-        store_list = Store.query.all()
-        return render_template('lend.html', store_list=store_list)
+        #store_list = Store.query.all()
+        #return render_template('lend.html', store_list=store_list)
+        return redirect(url_for('main.calendar_view'))
 
     elif request.method == 'POST':
-        date_list = request.form.get('pickdate', '')
-        date_list = date_list.split(' - ')
+        pickdate = request.form.get('pickdate', '')
+        #date_list = date_list.split(' - ')
+        '''
         lend = Lending(
             person=request.form.get('person', ''),
             phone=request.form.get('phone', ''),
@@ -42,9 +44,12 @@ def lend_view():
             remarks=request.form.get('remarks', ''),
         )
         session.add(lend)
+        '''
         #session.commit()
 
-        return redirect(url_for('main.calendar_view'))
+        #return redirect(url_for('main.calendar_view'))
+        store_list = Store.query.all()
+        return render_template('lend.html', store_list=store_list, pickdate=pickdate)
 
 @main.route('/calendar')
 def calendar_view():
@@ -56,12 +61,3 @@ def calendar_view():
         cal_list=cal_list,
         year=today.year,
         month=today.month)
-
-@main.route('/api/calendar/<year>/<month>')
-def calendar_api(year, month):
-    cal_list = calendar.monthcalendar(year, month)
-    return jsonify({
-        'year': year,
-        'month': month,
-        'cal_list': cal_list,
-    })

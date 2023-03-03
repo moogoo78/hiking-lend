@@ -29,8 +29,6 @@ from app.database import session
 from app.models import User
 #from scripts import load_data
 
-ALEMBIC_BIN_PATH = '/root/.local/bin/alembic'
-
 
 # TODO: similer to flask default
 '''
@@ -52,10 +50,12 @@ dictConfig({
 '''
 def apply_blueprints(app):
     from app.blueprints.main import main as main_bp
+    from app.blueprints.api import api as api_bp
     from app.blueprints.admin import admin as admin_bp;
 
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(api_bp, url_prefix='/api/v1')
 
 
 def create_app():
@@ -120,21 +120,20 @@ def shutdown_session(exception=None):
 @flask_app.cli.command('makemigrations')
 @click.argument('message')
 def makemigrations(message):
-    cmd_list = [ALEMBIC_BIN_PATH, 'revision', '--autogenerate', '-m', message]
+    cmd_list = ['alembic', 'revision', '--autogenerate', '-m', message]
     subprocess.call(cmd_list)
 
     return None
 
 @flask_app.cli.command('migrate')
 def migrate():
-    cmd_list = [ALEMBIC_BIN_PATH, 'upgrade', 'head']
+    cmd_list = ['alembic', 'upgrade', 'head']
     subprocess.call(cmd_list)
 
 @flask_app.cli.command('createuser')
 @click.argument('username')
 @click.argument('passwd')
-@click.argument('org_id')
-def createuser(username, passwd, org_id):
+def createuser(username, passwd):
     hashed_password = generate_password_hash(passwd)
     user = User(username=username, passwd=hashed_password)
     session.add(user)

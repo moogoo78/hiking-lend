@@ -12,8 +12,11 @@ ADMIN_REGISTER_MAP = {
         'model': Store,
         'fields': {
             'title': { 'label': '名稱' },
+            'latitude_decimal': { 'label': '緯度', 'type': 'text' },
+            'longitude_decimal': { 'label': '經度', 'type': 'text' },
+            'address': {'label': '地址', 'type': 'textarea'}
         },
-        'list_display': ('title',)
+        'list_display': ('title', 'latitude_decimal', 'longitude_decimal', 'address')
     },
     'entity': {
         'name': 'entity',
@@ -24,7 +27,8 @@ ADMIN_REGISTER_MAP = {
         'fields': {
             'name': { 'label': '名稱' },
             'status': { 'label': '狀態' },
+            'store': { 'label': '店家', 'type': 'select', 'foreign': Store, 'display': 'title'},
         },
-        'list_display': ('name', 'status')
+        'list_display': ('name', 'store', 'status')
     },
 }

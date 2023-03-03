@@ -1,3 +1,5 @@
+import re
+
 from flask import (
     Blueprint,
     request,
@@ -10,7 +12,18 @@ from flask import (
     flash,
 )
 from flask.views import View
+from flask_login import (
+    login_required,
+    current_user,
+)
+
 from .admin_register import ADMIN_REGISTER_MAP
+from app.database import (
+    session,
+    db_insp,
+    ModelHistory,
+    ChangeLog,
+)
 
 admin = Blueprint('admin', __name__)
 
@@ -113,7 +126,7 @@ class FormView(View):
 
             m2m_collections = []
             for key, value in request.form.items():
-                # print(key, value, flush=True)
+                print(key, value, flush=True)
                 if key[:19] == '__m2m__collection__':
                     collection = session.get(Collection, int(key[19:]))
                     m2m_collections.append(collection)
