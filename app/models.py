@@ -49,6 +49,8 @@ class Store(Base):
     address = Column(Text)
     #telephone = Column(String(500))
 
+    entities = relationship('Entity')
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -70,11 +72,20 @@ class Entity(Base):
     name = Column(String(500))
     store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
     status = Column(String(10)) # F: free, O: occupied
-    store = relationship('Store')
+
+    store = relationship('Store', overlaps='entities')
 
     @staticmethod
-    def find_free():
-        return Entity.query.filter(Entity.status==Entity.STATUS_CHOICES[0][0]).all()
+    def find_free(store_id=None, is_one=False):
+        query = Entity.query.filter(Entity.status==Entity.STATUS_CHOICES[0][0])
+        if store_id:
+            query = query.filter(Entity.store_id==store_id)
+
+        if is_one:
+            return query.first()
+
+        return query.all()
+
 
 class Lending(Base):
     __tablename__ = 'lending'
@@ -85,8 +96,9 @@ class Lending(Base):
     date_start = Column(Date)
     date_end = Column(Date)
     store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
-    # entity_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
+    entity_id = Column(Integer, ForeignKey('entity.id', ondelete='SET NULL'), nullable=True)
     remarks = Column(Text)
+    status = Column(String(10), default='L') # L: lend, D: done
 
 class LendLog(Base):
     __tablename__ = 'lend_log'

@@ -6,65 +6,13 @@
 
 {% block script %}
 <script src="{{ url_for('static', filename='js/easepick.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/') }}"></script>
-<script>
-      const DateTime = easepick.DateTime;
-      const bookedDates = [
-          '2023-02-02',
-          ['2023-02-06', '2023-01-11'],
-          '2023-02-18',
-          '2023-02-20',
-          '2023-02-25',
-      ].map(d => {
-          if (d instanceof Array) {
-            const start = new DateTime(d[0], 'YYYY-MM-DD');
-            const end = new DateTime(d[1], 'YYYY-MM-DD');
-
-            return [start, end];
-          }
-
-          return new DateTime(d, 'YYYY-MM-DD');
-      });
-      const picker = new easepick.create({
-        element: document.getElementById('datepicker'),
-        calendars: 2,
-        grid: 2,
-        inline: true,
-        css: [
-          "{{ url_for('static', filename="css/easepick.css") }}",
-          "{{ url_for('static', filename="css/demo_hotelcal.css") }}",
-        ],
-        plugins: ['RangePlugin', 'LockPlugin'],
-        RangePlugin: {
-          tooltipNumber(num) {
-            return num - 1;
-          },
-          locale: {
-            one: '天',
-            other: '天',
-          },
-        },
-        LockPlugin: {
-          minDate: new Date(),
-          minDays: 2,
-          inseparable: true,
-          filter(date, picked) {
-            if (picked.length === 1) {
-              const incl = date.isBefore(picked[0]) ? '[)' : '(]';
-              return !picked[0].isSame(date, 'day') && date.inArray(bookedDates, incl);
-            }
-
-            return date.inArray(bookedDates, '[)');
-          },
-        }
-      });
-</script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 {% endblock %}
 
 {% block main %}
 <div class="uk-container uk-container-small">
   <h2>租借狀態</h2>
-  <form class="uk-form-stacked" method="POST" action={{ url_for('main.lend_view')}}>
+  <form class="uk-form-stacked" method="POST" action="{{ url_for('main.calendar_view')}}">
       <div class="uk-margin">
       <label class="uk-form-label" for="datepicker">選擇日期區間</label>
       <div class="uk-form-controls">

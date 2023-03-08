@@ -1,5 +1,4 @@
 from datetime import datetime
-import calendar
 
 from flask import (
     Blueprint,
@@ -9,6 +8,10 @@ from flask import (
     redirect,
     url_for,
     flash,
+)
+from sqlalchemy import (
+    or_,
+    and_,
 )
 
 from app.database import session
@@ -34,30 +37,63 @@ def lend_view():
 
     elif request.method == 'POST':
         pickdate = request.form.get('pickdate', '')
-        #date_list = date_list.split(' - ')
-        '''
-        lend = Lending(
-            person=request.form.get('person', ''),
-            phone=request.form.get('phone', ''),
-            date_start=date_list[0],
-            date_end=date_list[1],
-            remarks=request.form.get('remarks', ''),
-        )
-        session.add(lend)
-        '''
-        #session.commit()
+        store_id = request.form.get('store', '')
+        date_list = pickdate.split(' - ')
+        if entity := Entity.find_free(store_id, True):
+            entity.status = Entity.STATUS_CHOICES[1][0]
 
-        #return redirect(url_for('main.calendar_view'))
-        store_list = Store.query.all()
-        return render_template('lend.html', store_list=store_list, pickdate=pickdate)
+            lend = Lending(
+                person=request.form.get('person', ''),
+                phone=request.form.get('phone', ''),
+                date_start=date_list[0],
+                date_end=date_list[1],
+                remarks=request.form.get('remarks', ''),
+                store_id=int(store_id),
+                entity_id=entity.id
+            )
+            session.add(lend)
+            session.commit()
 
-@main.route('/calendar')
+            flash('registered')
+
+        return redirect(url_for('main.calendar_view'))
+
+
+@main.route('/calendar', methods=['GET', 'POST'])
 def calendar_view():
-    today = datetime.today()
-    cal_list = calendar.monthcalendar(today.year, today.month)
+    if request.method == 'GET':
+        # today = datetime.today()
+        # cal_list = calendar.monthcalendar(today.year, today.month)
 
-    return render_template(
-        'calendar.html',
-        cal_list=cal_list,
-        year=today.year,
-        month=today.month)
+        # return render_template(
+        #     'calendar.html',
+        #     #cal_list=cal_list,
+        #     year=today.year,
+        #     month=today.month)
+        return render_template('calendar.html')
+    elif request.method == 'POST':
+        pickdate = request.form.get('pickdate', '')
+        date_list = pickdate.split(' - ')
+
+        if len(date_list) < 2:
+            return redirect(url_for('main.calendar_view'))
+
+        lending_list = Lending.query.filter(or_(
+            and_(date_list[0] >= Lending.date_start, date_list[0] <= Lending.date_end),
+            and_(date_list[1] >= Lending.date_start, date_list[1] <= Lending.date_end),
+            and_(date_list[0] <= Lending.date_start, date_list[1] >= Lending.date_end))
+        ).all()
+        stores = {}
+        store_list = Store.query.all()
+        for store in store_list:
+            #print(len(store.entities), flush=True)
+            stores[store.id] = {
+                'num_entity': len(store.entities),
+                'obj': store,
+            }
+        for i in lending_list:
+            stores[i.store_id]['num_entity'] -= 1
+
+        store_list = [stores[x]['obj'] for x in stores if stores[x]['num_entity'] > 0]
+        #print(stores, flush=True)
+        return render_template('lend.html', store_list=store_list, pickdate=pickdate)
