@@ -159,7 +159,7 @@ class FormView(View):
                 history.item_id = self.item.id
                 session.commit()
 
-            if self.item.admin_save:
+            if hasattr(self.item, 'admin_save'):
                 self.item.admin_save(self.item)
 
 

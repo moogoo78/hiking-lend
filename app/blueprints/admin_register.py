@@ -27,7 +27,7 @@ ADMIN_REGISTER_MAP = {
         'model': Entity,
         'fields': {
             'name': { 'label': '名稱' },
-            'status': { 'label': '狀態' },
+            'status': { 'label': '狀態', 'type': 'select', 'options': [('F', '可借'), ('O', '借出')] },
             'store': { 'label': '店家', 'type': 'select', 'foreign': Store, 'display': 'title'},
         },
         'list_display': ('name', 'store', 'status')
