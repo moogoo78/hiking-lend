@@ -30,14 +30,15 @@ admin = Blueprint('admin', __name__)
 
 
 @admin.route('/static/<path:filename>')
-#@login_required
+@login_required
 def static_file(filename):
     return send_from_directory('static_admin', filename)
 
 
 @admin.route('/')
-#@login_required
+@login_required
 def index():
+    print ('aoeuaoeu', flush=True)
     return render_template('admin/dashboard.html')
 
 class ListView(View):
