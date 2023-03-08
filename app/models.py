@@ -66,6 +66,9 @@ class Entity(Base):
         ('O', 'Occupied'),
     )
 
+    STATUS_FREE = 'F'
+    STATUS_OCCUPIED = 'O'
+
     __tablename__ = 'entity'
 
     id = Column(Integer, primary_key=True)
@@ -90,6 +93,13 @@ class Entity(Base):
 class Lending(Base):
     __tablename__ = 'lending'
 
+    STATUS_CHOICES = (
+        ('L', 'lend'),
+        ('R', 'returned')
+    )
+    STATUS_LEND = 'L'
+    STATUS_RETURNED = 'R'
+
     id = Column(Integer, primary_key=True)
     person = Column(String(500))
     phone = Column(String(500))
@@ -98,7 +108,18 @@ class Lending(Base):
     store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)
     entity_id = Column(Integer, ForeignKey('entity.id', ondelete='SET NULL'), nullable=True)
     remarks = Column(Text)
-    status = Column(String(10), default='L') # L: lend, D: done
+    status = Column(String(10), default='L') # L: lend, R: returned
+
+    store = relationship('Store')
+    entity = relationship('Entity')
+
+    @classmethod
+    def admin_save(self, obj):
+        #print(self, self.status, obj.status, flush=True)
+        if obj.status == self.STATUS_RETURNED:
+            if entity := session.get(Entity, obj.entity_id):
+                entity.status = Entity.STATUS_FREE
+                session.commit()
 
 class LendLog(Base):
     __tablename__ = 'lend_log'

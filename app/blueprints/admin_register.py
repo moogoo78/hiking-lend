@@ -1,6 +1,7 @@
 from app.models import (
     Store,
     Entity,
+    Lending,
 )
 
 ADMIN_REGISTER_MAP = {
@@ -30,5 +31,22 @@ ADMIN_REGISTER_MAP = {
             'store': { 'label': '店家', 'type': 'select', 'foreign': Store, 'display': 'title'},
         },
         'list_display': ('name', 'store', 'status')
+    },
+    'lending': {
+        'name': 'lending',
+        'label': '出借',
+        'display': 'person',
+        'resource_name': 'lending',
+        'model': Lending,
+        'fields': {
+            'person': { 'label': '人名' },
+            'date_start': {'label': '開始日期'},
+            'date_end': {'label': '結束日期'},
+            'phone': { 'label': '電話' },
+            'store': { 'label': '店家', 'type': 'select', 'foreign': Store, 'display': 'title'},
+            'entity': { 'label': '物件', 'type': 'select', 'foreign': Entity, 'display': 'name'},
+            'status': {'label': '狀態', 'type': 'select', 'options': [('L', '出借中'), ('R', '歸還')] },
+        },
+        'list_display': ('person', 'date_start', 'date_end', 'entity', 'store')
     },
 }

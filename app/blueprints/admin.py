@@ -126,7 +126,6 @@ class FormView(View):
 
             m2m_collections = []
             for key, value in request.form.items():
-                print(key, value, flush=True)
                 if key[:19] == '__m2m__collection__':
                     collection = session.get(Collection, int(key[19:]))
                     m2m_collections.append(collection)
@@ -160,6 +159,10 @@ class FormView(View):
                 history.item_id = self.item.id
                 session.commit()
 
+            if self.item.admin_save:
+                self.item.admin_save(self.item)
+
+
             flash(f'已儲存: {self.item}', 'success')
             return redirect(url_for(f'admin.{self.register["name"]}-list'))
 
@@ -179,6 +182,7 @@ class FormView(View):
 
 for name, reg in ADMIN_REGISTER_MAP.items():
     res_name = reg['resource_name']
+
     admin.add_url_rule(
         f'/{res_name}/',
         view_func=ListView.as_view(f'{name}-list', reg),
