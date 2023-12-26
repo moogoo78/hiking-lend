@@ -15,7 +15,10 @@ ADMIN_REGISTER_MAP = {
             'title': { 'label': '名稱' },
             'latitude_decimal': { 'label': '緯度', 'type': 'text' },
             'longitude_decimal': { 'label': '經度', 'type': 'text' },
-            'address': {'label': '地址', 'type': 'textarea'}
+            'address': {'label': '地址', 'type': 'textarea'},
+            'email': {'label': 'email', 'type': 'text'},
+            'telephone': {'label': '電話', 'type': 'text'},
+            'line': {'label': 'line', 'type': 'text'},
         },
         'list_display': ('title', 'latitude_decimal', 'longitude_decimal', 'address')
     },

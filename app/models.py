@@ -47,7 +47,10 @@ class Store(Base):
     latitude_decimal = Column(Numeric(precision=9, scale=6))
     longitude_decimal = Column(Numeric(precision=10, scale=7))
     address = Column(Text)
-    #telephone = Column(String(500))
+    email = Column(String(500))
+    telephone = Column(String(500))
+    line = Column(String(500))
+    icon = Column(String(500))
 
     entities = relationship('Entity')
 

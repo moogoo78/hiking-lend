@@ -69,8 +69,16 @@ def calendar_view():
         #     'calendar.html',
         #     #cal_list=cal_list,
         #     year=today.year,
-        #     month=today.month)
-        return render_template('calendar.html')
+        #     month=today.month)        
+        if key := request.args.get('store'):
+            if store := Store.query.filter(Store.title==key).first():
+                return render_template('calendar.html', store=store)
+            else:
+                return abort(404)
+        else:
+            store_list = Store.query.all()
+            return render_template('calendar.html', stores=store_list)
+
     elif request.method == 'POST':
         pickdate = request.form.get('pickdate', '')
         date_list = pickdate.split(' - ')

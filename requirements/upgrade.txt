@@ -1,9 +1,11 @@
 # Flask
-Flask==2
+Flask==3
 Flask-Login
 
 # database
 SQLAlchemy
 psycopg2-binary
+alembic
 
 # environments
+python-dotenv

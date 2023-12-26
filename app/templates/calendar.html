@@ -12,15 +12,37 @@
 {% block main %}
 <div class="uk-container uk-container-small">
   <h2>租借狀態</h2>
+  <h3 class="text-bold">選擇日期區間{% if store %} | 店家：{{ store.title }} {% endif %}</h3>
   <form class="uk-form-stacked" method="POST" action="{{ url_for('main.calendar_view')}}">
       <div class="uk-margin">
-      <label class="uk-form-label" for="datepicker">選擇日期區間</label>
+        {#<label class="uk-form-label" for="datepicker">選擇日期區間</label>#}
       <div class="uk-form-controls">
         <input id="datepicker" class="uk-input uk-form-width-large uk-form-large" type="text" placeholder="choose..." name="pickdate" />
       </div>
     </div>
     <button class="uk-button uk-button-primary" type="submit">預約</button>
   </form>
+
+  {% if stores %}
+  <h3 class="text-bold">選擇店家</h3>
+  <div class="uk-child-width-1-3@m" uk-grid>
+    {% for i in stores %}
+    <div>
+      <a href="{{ url_for('main.calendar_view', store=i.title) }}"><div class="uk-card uk-card-default uk-card-hover">
+            <div class="uk-card-media-top">
+                <img src="https://lh5.googleusercontent.com/p/AF1QipP2M-KVRqzuNPhFnmI2YJ9GZOmTsvplxazCtz70=w600-h485-p-k-no" width="1800" height="1200" alt="">
+            </div>
+            <div class="uk-card-body">
+                <h3 class="uk-card-title">{{ i.title }}</h3>
+                <p>{{ i.address }}</p>
+            </div>
+      </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {#
   <table class="uk-table">
     <caption>{{ year }} 年 {{ month }} 月</caption>

@@ -6,7 +6,8 @@ services:
       dockerfile: ./docker/Dockerfile_prod
     expose:
       - 8001
-
+  postgres:
+    restart: always
   nginx:
     image: nginx:alpine
     restart: always

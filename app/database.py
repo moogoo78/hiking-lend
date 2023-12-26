@@ -16,7 +16,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from app.utils import get_time
 
 #engine = create_engine('sqlite:////tmp/test.db', convert_unicode=True)
-engine = create_engine('postgresql+psycopg2://postgres:example@postgres:5432/hikinglend', convert_unicode=True)
+engine = create_engine('postgresql+psycopg2://postgres:example@postgres:5432/hikinglend')
 session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))

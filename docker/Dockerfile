@@ -3,6 +3,8 @@ ARG DEBIAN_RELEASE
 
 FROM python:${PYTHON_VERSION}-slim-${DEBIAN_RELEASE} AS builder
 
+ARG PIP_REQUIREMENTS
+
 RUN apt-get update \
   && apt-get install -y build-essential \
   && apt-get purge -y --auto-remove \
@@ -10,15 +12,13 @@ RUN apt-get update \
 
 WORKDIR /code
 
-#COPY --from=node
-
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY requirements requirements
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements/upgrade.txt
+RUN pip install --no-cache-dir -r ${PIP_REQUIREMENTS}
 
 #ENTRYPOINT ["python"]
 #CMD ["app.py"]
