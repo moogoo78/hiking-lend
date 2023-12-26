@@ -3,6 +3,7 @@ Flask==2
 Flask-Login
 
 # database
-SQLAlchemy==1.4
+SQLAlchemy
+psycopg2-binary
 
 # environments

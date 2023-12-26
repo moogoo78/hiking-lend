@@ -18,7 +18,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY requirements requirements
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements/base.txt
+RUN pip install --no-cache-dir -r requirements/upgrade.txt
 
 #ENTRYPOINT ["python"]
 #CMD ["app.py"]
