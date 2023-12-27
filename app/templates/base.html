@@ -25,8 +25,8 @@
 
 					<div class="uk-navbar-right">
 						<ul class="uk-navbar-nav uk-visible@m">
-							<li class="uk-active"><a href="#">關於留守平台</a></li>
-							<li><a href="#">租借服務</a></li>
+							<li{% if request.path == "/" %} class="uk-active"{% endif %}><a href="{{ url_for('main.landing') }}">關於留守平台</a></li>
+							<li{% if 'calendar' in request.path %} class="uk-active"{% endif %}><a href="{{ url_for('main.calendar_view') }}">租借服務</a></li>
 							{#<li><a href="#">Our Products</a></li>
 							<li><a href="#">Contact Us</a></li>#}
 						</ul>

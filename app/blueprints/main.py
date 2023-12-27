@@ -82,6 +82,7 @@ def calendar_view():
     elif request.method == 'POST':
         pickdate = request.form.get('pickdate', '')
         date_list = pickdate.split(' - ')
+        store_name = request.form.get('store', '')
 
         if len(date_list) < 2:
             return redirect(url_for('main.calendar_view'))
@@ -104,4 +105,4 @@ def calendar_view():
 
         store_list = [stores[x]['obj'] for x in stores if stores[x]['num_entity'] > 0]
         #print(stores, flush=True)
-        return render_template('lend.html', store_list=store_list, pickdate=pickdate)
+        return render_template('lend.html', store_list=store_list, pickdate=pickdate, store_name=store_name)

@@ -14,6 +14,7 @@
   <h2>租借狀態</h2>
   <h3 class="text-bold">選擇日期區間{% if store %} | 店家：{{ store.title }} {% endif %}</h3>
   <form class="uk-form-stacked" method="POST" action="{{ url_for('main.calendar_view')}}">
+    <input type="hidden" name="store" value="{{ request.args.store }}">
       <div class="uk-margin">
         {#<label class="uk-form-label" for="datepicker">選擇日期區間</label>#}
       <div class="uk-form-controls">

@@ -21,7 +21,7 @@
 <div class="uk-container uk-margin-large-top">
   <form class="uk-form-stacked" action="{{ url_for('main.lend_view') }}" method="post">
     <fieldset class="uk-fieldset">
-      <legend class="uk-legend">Legend</legend>
+      {#<legend class="uk-legend">Legend</legend>#}
       <div id="map" style="width: 600px; height: 400px;"></div>
       <div class="uk-margin">
         <label class="uk-form-label" for="datepicker">選擇日期</label>
@@ -32,10 +32,10 @@
       <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-select">領取店家</label>
         <div class="uk-form-controls">
-          <select class="uk-select" id="form-stacked-select" name="store">
+          <select class="uk-select" id="form-stacked-select" name="store_id"{% if store_name %} disabled{% endif %}>
             <option value="">-- 請選擇--</option>
             {% for i in store_list %}
-            <option value="{{ i.id }}">{{ i.title }}</option>
+            <option value="{{ i.id }}" {% if i.title == store_name %} selected{% endif %}>{{ i.title }}</option>
             {% endfor %}
           </select>
         </div>
