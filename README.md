@@ -1,5 +1,11 @@
 # Hiking-lend
 
+## System
+
+Built by:
+- Web App: Python (Flask)
+- Database: PostgreSQL
+- Front-end Framework: [UIkit](https://getuikit.com/)
 
 ## Design
 
