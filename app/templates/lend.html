@@ -32,10 +32,10 @@
       <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-select">領取店家</label>
         <div class="uk-form-controls">
-          <select class="uk-select" id="form-stacked-select" name="store_id"{% if store_name %} disabled{% endif %}>
+          <select class="uk-select" id="form-stacked-select" name="store_id"{% if store_id %} disabled{% endif %}>
             <option value="">-- 請選擇--</option>
             {% for i in store_list %}
-            <option value="{{ i.id }}" {% if i.title == store_name %} selected{% endif %}>{{ i.title }}</option>
+            <option value="{{ i.id }}" {% if i.id == store.id %} selected{% endif %}>{{ i.title }}</option>
             {% endfor %}
           </select>
         </div>
@@ -51,6 +51,12 @@
           <div class="uk-form-controls">
             <input class="uk-input" id="phone" type="text" placeholder="" name="phone">
           </div>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="form-stacked-text">聯絡Email</label>
+        <div class="uk-form-controls">
+          <input class="uk-input" id="phone" type="text" placeholder="Email" name="email">
+        </div>
       </div>
       <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-text">備註</label>

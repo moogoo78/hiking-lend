@@ -20,9 +20,6 @@ from werkzeug.security import (
 )
 from flask_login import (
     LoginManager,
-    login_user,
-    logout_user,
-    login_required,
 )
 
 from app.database import session
@@ -77,33 +74,6 @@ login_manager.init_app(flask_app)
 def load_user(id):
     return User.query.get(id)
 
-@flask_app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        username = request.form.get('username', '')
-        passwd = request.form.get('passwd', '')
-
-        if u := User.query.filter(username==username).first():
-            if check_password_hash(u.passwd, passwd):
-                login_user(u)
-                flash('已登入')
-                #next_url = flask.request.args.get('next')
-                # is_safe_url should check if the url is safe for redirects.
-                # See http://flask.pocoo.org/snippets/62/ for an example.
-                #if not is_safe_url(next):
-                #    return flask.abort(400)
-                return redirect(url_for('admin.index'))
-
-        flash('帳號或密碼錯誤')
-        return redirect('/login')
-
-@flask_app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
 
 @flask_app.route('/url_maps')
 def debug_url_maps():

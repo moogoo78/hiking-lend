@@ -32,7 +32,8 @@
 						</ul>
 						<div class="uk-navbar-item">
 							<a class="uk-navbar-toggle uk-hidden@m" data-uk-toggle data-uk-navbar-toggle-icon href="#offcanvas-nav"></a>
-							<a href="#" class="uk-button uk-button-secondary uk-visible@m"><span data-uk-icon="sign-in"></span>登入</a>
+							<a href="{{ url_for('main.login') }}" class="uk-button uk-button-secondary uk-visible@m"><span data-uk-icon="sign-in"></span>登入</a>
+                                                        <a href="{{ url_for('main.register') }}" class="uk-button uk-button-default uk-visible@m"><span data-uk-icon="user"></span>註冊</a>
 						</div>
 					</div>
 				</nav>

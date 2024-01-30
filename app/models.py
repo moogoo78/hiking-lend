@@ -51,6 +51,8 @@ class Store(Base):
     telephone = Column(String(500))
     line = Column(String(500))
     icon = Column(String(500))
+    next_process = Column(String(500))
+    status = Column(String(2))
 
     entities = relationship('Entity')
 
@@ -106,6 +108,7 @@ class Lending(Base):
     id = Column(Integer, primary_key=True)
     person = Column(String(500))
     phone = Column(String(500))
+    email = Column(String(500))
     date_start = Column(Date)
     date_end = Column(Date)
     store_id = Column(Integer, ForeignKey('store.id', ondelete='SET NULL'), nullable=True)

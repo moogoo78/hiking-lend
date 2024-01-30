@@ -36,9 +36,11 @@ def static_file(filename):
 
 
 @admin.route('/')
-@login_required
+#@login_required
 def index():
-    print ('aoeuaoeu', flush=True)
+    if not current_user.is_authenticated:
+        #return current_app.login_manager.unauthorized()
+        return redirect(url_for('main.login'))
     return render_template('admin/dashboard.html')
 
 class ListView(View):
