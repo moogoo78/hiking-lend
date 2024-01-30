@@ -38,11 +38,11 @@ build local deployment docker image
 
 ```bash
 docker compose build
-'''
+```
 
 start local deployment environment
 
-'''bash
+```bash
 docker compose up
 ```
 
